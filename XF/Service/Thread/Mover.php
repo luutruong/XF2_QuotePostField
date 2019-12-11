@@ -10,35 +10,27 @@ class Mover extends XFCP_Mover
     /**
      * @var bool
      */
-    private $flagQuotePostFieldEnabled = true;
-
-    /**
-     * @param bool $flagQuotePostFieldEnabled
-     * @return void
-     */
-    public function setFlagQuotePostFieldEnabled(bool $flagQuotePostFieldEnabled)
-    {
-        $this->flagQuotePostFieldEnabled = $flagQuotePostFieldEnabled;
-    }
+    protected $flagQuotePostFieldEnabled = true;
 
     /**
      * @param \XF\Entity\Forum $forum
      * @return mixed
+     * @throws \XF\PrintableException
      */
     public function move(\XF\Entity\Forum $forum)
     {
         if ($this->flagQuotePostFieldEnabled) {
-            $this->addExtraSetup(function (Thread $thread) {
+            $this->addExtraSetup(function (Thread $thread) use ($forum) {
                 $post = $thread->FirstPost;
 
                 $message = $post->message;
 
-                $before = FieldsRender::render($thread, 'before');
+                $before = FieldsRender::render($thread, 'before', $forum);
                 if (\strlen($before) > 0) {
                     $message = $before . "\n\n" . $message;
                 }
 
-                $after = FieldsRender::render($thread, 'after');
+                $after = FieldsRender::render($thread, 'after', $forum);
                 if (\strlen($after) > 0) {
                     $message = $message . "\n\n" . $after;
                 }
