@@ -1,0 +1,20 @@
+<xf:macro name="custom_fields_values" arg-type="!"
+          arg-group="!"
+          arg-set="!"
+          arg-onlyInclude="{{ null }}"
+          arg-additionalFilters="{{ [] }}"
+          arg-valueClass="pairs pairs--columns pairs--fixedSmall">
+    <xf:foreach loop="$xf.app.getCustomFields({$type}, {$group}, {$onlyInclude}, {$additionalFilters})" key="$fieldId" value="$fieldDefinition">
+        <xf:if is="$fieldDefinition.hasValue({$set.{$fieldDefinition.field_id}})">
+            <div class="{$valueClass}">
+                <span><b>{$fieldDefinition.title}:</b></span>
+                <span>
+                    <xf:macro name="custom_field_value"
+                              template="custom_fields_macros"
+                              arg-definition="{$fieldDefinition}"
+                              arg-value="{$set.{$fieldDefinition.field_id}}" />
+                </span>
+            </div>
+        </xf:if>
+    </xf:foreach>
+</xf:macro>
